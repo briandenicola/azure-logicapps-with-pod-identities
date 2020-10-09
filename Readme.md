@@ -62,11 +62,15 @@ A simple deployment of a HTTP Triggered Logic Apps inside AKS. HPA or KNative ca
 2. kubectl get pods
 3. kubectl describe services.serving.knative.dev  | grep -i URL
 4. Get Invocation URL:
+   ```
     $uri = Invoke-RestMethod -Method Post -uri "http://azure-logicapps-test.default.knative.bjd.demo/runtime/webhooks/workflow/api/management/workflows/Simple/triggers/manual/listCallbackUrl?api-version=2019-10-01-edge-preview&code=907f2b9fe55f2d7620ef43d11bd89cd4"
     $uri.queries.sig
+   ```
 4. Test with hey (https://github.com/rakyll/hey):
-     * Example: hey -m POST -c 50 -z 30s "http://azure-logicapps-test.default.knative.bjd.demo/api/Simple/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig={{$uri.queries.sig}}
-     * kubectl get pods -w
-
+     * Example: 
+     ```
+     hey -m POST -c 50 -z 30s "http://azure-logicapps-test.default.knative.bjd.demo/api/Simple/triggers/manual/invoke?api-version=2020-05-01-preview&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig={{$uri.queries.sig}}
+     kubectl get pods -w
+     ``` 
 # Roadmap
 -[ ] : Update Deployment to Helm
