@@ -73,4 +73,4 @@ A simple deployment of a HTTP Triggered Logic Apps inside AKS. HPA or KNative ca
      kubectl get pods -w
      ``` 
 # Roadmap
--[ ] : Update Deployment to Helm
+- [ ] : Update Deployment to Helm
