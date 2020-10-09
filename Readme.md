@@ -18,11 +18,14 @@ A simple deployment of a HTTP Triggered Logic Apps inside AKS. HPA or KNative ca
 7. kubectl get svc -n istio-system
     * Copy the External IP Address for istio-ingressgateway 
     * Create DNS A Record pointting *.knative.bjd.demo
-8. kubectl patch configmap/config-domain \
+8. Patch the config-domain configmap
+   ```
+   kubectl patch configmap/config-domain \
     --namespace knative-serving \
     --type merge \
     --patch '{"data":{"knative.bjd.demo":""}}'
-
+   ```
+   
 ## Azure Resources
 1. Create a Resource Group
     * Save name, location, Subscription Id, and Tenant Id
@@ -43,7 +46,8 @@ A simple deployment of a HTTP Triggered Logic Apps inside AKS. HPA or KNative ca
 # Deploy
 1. Update {{ACR_NAME}} in ./deploy/logicapp.yaml
 2. Create docker secret
-    ```kubectl create secret docker-registry acr-secrets \
+    ```
+    kubectl create secret docker-registry acr-secrets \
     --docker-server={{ACR_NAME}}.azurecr.io \
     --docker-email=sample@example.com \
     --docker-username={{ACR_NAME}} \
