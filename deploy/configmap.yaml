@@ -3,16 +3,16 @@ kind: Secret
 metadata:
   name: azure-logicapps-runtime-secrets
 data:
-  AzureWebJobsStorage: "" 
+  AzureWebJobsStorage: ""
   WORKFLOWS_TENANT_ID: ""
   WORKFLOWS_SUBSCRIPTION_ID: ""
-  WORKFLOWS_RESOURCE_GROUP_NAME: RGV2U3ViMDFfTG9naWNBcHBDb25uZWN0b3JzX1JHCg==
-  WORKFLOWS_LOCATION_NAME: Y2VudHJhbHVzCg==
+  WORKFLOWS_RESOURCE_GROUP_NAME: ""
+  WORKFLOWS_LOCATION_NAME: ""
 ---
 apiVersion: v1
 kind: Secret
 metadata:
-  name: azure-functions-secrets
+  name: azure-logicapps-secrets
 stringData:
   host.json: |-
     {
