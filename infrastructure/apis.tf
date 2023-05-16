@@ -12,4 +12,8 @@ resource "azurerm_api_connection" "this" {
   parameter_values = {
     connectionString = azurerm_eventhub_namespace.this.default_primary_connection_string
   }
+
+  lifecycle {
+    ignore_changes = ["parameter_values"]
+  }
 }
