@@ -1,0 +1,44 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "Terminate": {
+                "type": "Terminate",
+                "inputs": {
+                    "runStatus": "Succeeded",
+                    "runError": {
+                        "message": "Received events from stream"
+                    }
+                },
+                "runAfter": {}
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "triggers": {
+            "When_events_are_available_in_Event_Hub": {
+                "type": "ApiConnection",
+                "inputs": {
+                    "host": {
+                        "connection": {
+                            "referenceName": "eventhubs"
+                        }
+                    },
+                    "method": "get",
+                    "path": "/@{encodeURIComponent('requests')}/events/batch/head",
+                    "queries": {
+                        "contentType": "application/octet-stream",
+                        "consumerGroupName": "logicapp-client",
+                        "maximumEventsCount": 50
+                    }
+                },
+                "recurrence": {
+                    "frequency": "Second",
+                    "interval": 5,
+                    "timeZone": "Central Standard Time"
+                }
+            }
+        }
+    },
+    "kind": "Stateless"
+}
