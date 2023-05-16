@@ -4,32 +4,43 @@ A demo repository of using Azure Functions in a Docker container using AKS Workl
 
 # Infrastructure Setup
 ```bash
-cd infrastructure
-terraform init
-terraform apply
-az aks get-credentials -n ${existing_aks_cluster_name} -g ${existing_aks_cluster_rg}
+
+export REGION=southcentralus
+terraform -chdir=./infrastructure workspace new ${REGION} || true
+terraform -chdir=./infrastructure workspace select ${REGION}
+terraform -chdir=./infrastructure init
+terraform -chdir=./infrastructure apply -auto-approve -var "region=${REGION}"
+
+vi ./scripts/set-env.sh
+    #Update the following lines
+    #export AKS="" #existing AKS with KEDA extension enabled
+    #export AKS_RG="" #existing AKS RG 
+    #export ACR="" #existing Azure Container Registry 
+
+source ./scripts/set-env.sh
+az aks get-credentials -n ${AKS} -g ${AKS_RG}
 kubectl create ns logicapp-eventprocessor
-./scripts/pod-identity.sh --cluster-name ${existing_aks_cluster_name} -n logicapp-eventprocessor -i ${managed_identity_name}
+bash ./scripts/pod-identity.sh --cluster-name ${AKS} -n logicapp-eventprocessor -i ${MSI_NAME}
 ```
 
 # Deploy API
+## Build 
 ```bash
 cd src/eventprocessor
-docker build -t ${existing_docker_repo}/keygenerator/eventprocessor:1.0 .
-docker push ${existing_docker_repo}/keygenerator/eventprocessor:1.0
+source ./scripts/set-env.sh
+docker build -t ${ACR}/la-eventprocessor:1.0 .
+docker push ${ACR}/la-eventprocessor:1.0
+```
+
+## Deploy
+```bash
 cd deploy
-helm upgrade -i eventprocessor -n logicapp-eventprocessor \
- --set "ACR_NAME=${existing_docker_repo}" \ 
- --set "MSI_CLIENTID=${managed_identity_clientid}" \
- --set "MSI_SELECTOR=${managed_identity_name}" \
- --set "COMMIT_VERSION=1.0" \
- --set "EH_CONNECTION_STRING=${event_hub_namespace_name}.servicebus.windows.net" \
- --set "WEBJOB_STORAGE_ACCOUNT_NAME=${storage_account_name}" \
- .
+helm update -i eventprocessor -n logicapp-eventprocessor --set "ACR_NAME=${ACR}" --set "COMMIT_VERSION=1.0" --set "MSI_CLIENTID=${MSI_CLIENT_ID}" --set "MSI_SELECTOR=${MSI_NAME}" --set "EVENTHUB_NAMESPACE_NAME=${EVENTHUB_NAMESPACE_NAME}" --set "WEBJOB_STORAGE_ACCOUNT_NAME=${STORAGE_ACCOUNT_NAME}" --set "WORKFLOWS_SUBSCRIPTION_ID=${MSI_SUBSCRIPTION_ID}" --set "WORKFLOWS_TENANT_ID=${MSI_TENANT_ID}" --set "WORKFLOWS_RESOURCE_GROUP_NAME=${RG}" --set "WORKFLOWS_LOCATION_NAME=${LOCATION}" .
 ```
 
 # Test
 ```bash
 az login 
-dotnet run -n ${app-name}-eventhub
+source ./scripts/set-env.sh
+dotnet run -n ${APP_NAME}-eventhub
 ```
