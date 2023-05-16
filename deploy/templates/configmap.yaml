@@ -10,7 +10,7 @@ data:
   EVENTHUB_CONNECTION__credential: managedidentity            
   EVENTHUB_CONNECTION__clientId: {{ .Values.MSI_CLIENTID }}  
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: {{ print .Values.EVENTHUB_NAMESPACE_NAME ".eventhub.windows.net" }}
-  AzureWebJobsStorage: {{ print "DefaultEndpointsProtocol=https;AccountName=" .Values.WEBJOB_STORAGE_ACCOUNT_NAME "AccountKey=" .Values.WEBJOB_STORAGE_ACCOUNT_KEY ";EndpointSuffix=core.windows.net" }}
+  AzureWebJobsStorage: {{ print "DefaultEndpointsProtocol=https;AccountName=" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ";AccountKey=" .Values.WEBJOB_STORAGE_ACCOUNT_KEY ";EndpointSuffix=core.windows.net" }}
   #AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
   WORKFLOWS_TENANT_ID: {{ .Values.WORKFLOWS_TENANT_ID }}
   WORKFLOWS_SUBSCRIPTION_ID: {{ .Values.WORKFLOWS_SUBSCRIPTION_ID }}
