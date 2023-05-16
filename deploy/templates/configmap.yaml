@@ -6,7 +6,8 @@ metadata:
 data:
   FUNCTIONS_WORKER_RUNTIME: node
   FUNCTIONS_EXTENSION_VERSION: ~4
-  WORKFLOWS_MANAGEMENT_BASE_URI: "https://management.azure.com/"              
+  WORKFLOWS_MANAGEMENT_BASE_URI: "https://management.azure.com/"
+  EVENTHUB_CONNECTION__credential: managedidentity            
   EVENTHUB_CONNECTION__clientId: {{ .Values.MSI_CLIENTID }}  
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: {{ print .Values.EVENTHUB_NAMESPACE_NAME ".eventhub.windows.net" }}
   AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
@@ -15,4 +16,5 @@ data:
   WORKFLOWS_RESOURCE_GROUP_NAME: {{ .Values.WORKFLOWS_RESOURCE_GROUP_NAME }}
   WORKFLOWS_LOCATION_NAME: {{ .Values.WORKFLOWS_LOCATION_NAME }}
   AZUREFUNCTIONS_SQLBINDINGS_TELEMETRY_OPTOUT: "true"
-  AzureWebJobsSecretStorageType: "kuberenetes"
+  WEBSITE_HOSTNAME: "localhost"
+  AzureWebJobsSecretStorageType: "files"
