@@ -1,11 +1,9 @@
 #!/bin/bash
 
-#!/bin/bash
-
 while (( "$#" )); do
   case "$1" in
     -c|--cluster-name)
-      CLUSTER_NAME+=($2)
+      CLUSTER_NAME=$2
       shift 2
       ;;
     -n|--namespace)
@@ -16,10 +14,9 @@ while (( "$#" )); do
       IDENTITY_NAME=$2
       shift 2
       ;;
-
     -h|--help)
-      echo "Usage: ./pod-identity.sh --cluster-name --namespace
-        Overview: This script will federate an Azure AD SPN with a Kubernetes Service Account
+      echo "Usage: ./pod-identity.sh --cluster-name --namespace -i
+        Overview: This script will add an Azure AD Managed Identity to an AKS cluster 
         --cluster-name(c) - The AKS cluster where this identity will be used
         --namespace(n)    - The Kuberentes namespace where this identity will be used
         --identity(i)     - The managed identity used by this application
