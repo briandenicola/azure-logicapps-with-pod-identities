@@ -1,0 +1,30 @@
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: azure-eventhub-auth
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  podIdentity:
+    provider: Azure
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: eventprocessor-scaler
+  namespace: {{ .Values.NAMESPACE }}
+spec:
+  scaleTargetRef:
+    name: eventprocessor
+  minReplicaCount: 1
+  maxReplicaCount: 3
+  cooldownPeriod:  120
+  pollingInterval: 15
+  triggers:
+  - type: azure-eventhub
+    metadata:
+      eventHubNamespace: {{ .Values.EVENTHUB_NAMESPACE_NAME }}
+      eventHubName: requests
+      consumerGroup: {{ .Values.CONSUMER_GROUP }}
+      checkpointStrategy: azureFunction
+    authenticationRef:
+        name: azure-eventhub-auth
