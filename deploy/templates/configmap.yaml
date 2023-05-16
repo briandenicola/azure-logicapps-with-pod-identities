@@ -10,6 +10,7 @@ data:
   EVENTHUB_CONNECTION__credential: managedidentity            
   EVENTHUB_CONNECTION__clientId: {{ .Values.MSI_CLIENTID }}  
   EVENTHUB_CONNECTION__fullyQualifiedNamespace: {{ print .Values.EVENTHUB_NAMESPACE_NAME ".eventhub.windows.net" }}
+  AzureWebJobsStorage: "DefaultEndpointsProtocol=https;AccountName=deer24617sa;AccountKey=;EndpointSuffix=core.windows.net"
   AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
   WORKFLOWS_TENANT_ID: {{ .Values.WORKFLOWS_TENANT_ID }}
   WORKFLOWS_SUBSCRIPTION_ID: {{ .Values.WORKFLOWS_SUBSCRIPTION_ID }}
@@ -18,3 +19,5 @@ data:
   AZUREFUNCTIONS_SQLBINDINGS_TELEMETRY_OPTOUT: "true"
   WEBSITE_HOSTNAME: "localhost"
   AzureWebJobsSecretStorageType: "files"
+  FUNCTIONS_V2_COMPATIBILITY_MODE: "true"
+  AZURE_FUNCTIONS_ENVIRONMENT: "Production" 
