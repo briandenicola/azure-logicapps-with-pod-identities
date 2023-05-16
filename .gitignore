@@ -6,8 +6,9 @@
 .terraform/
 .terraform.tfstate.lock.info
 .terraform.lock.hcl 
- terraform.tfstate 
+terraform.tfstate 
 terraform.tfstate.backup 
+terraform.tfstate.d/
 
 # User-specific files
 *.rsuser
