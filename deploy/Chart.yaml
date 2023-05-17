@@ -1,0 +1,6 @@
+apiVersion: v2
+name: eventprocessor
+description: A simple workflow to show how Azure Logic Apps work with Pod Identities in an Container on AKS
+type: application
+version: 0.0.1
+appVersion: 1.0.0
