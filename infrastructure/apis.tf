@@ -3,21 +3,6 @@ data "azurerm_managed_api" "this" {
   location = var.region
 }
 
-# resource "azurerm_api_connection" "this" {
-#   name                = "${local.eventhub_name}-connection"
-#   resource_group_name = azurerm_resource_group.this.name
-#   managed_api_id      = data.azurerm_managed_api.this.id
-#   display_name        = "${local.eventhub_name}-connection"
-
-#   parameter_values = {
-#     connection_string = "sb://${local.eventhub_name}.eventhub.windows.net/"
-#   }
-
-#   lifecycle {
-#     ignore_changes = ["parameter_values"]
-#   }
-# }
-
 resource "azurerm_resource_group_template_deployment" "managed_api_connection" {
   name                = "${local.eventhub_name}-connection"
   resource_group_name = azurerm_resource_group.this.name
@@ -27,7 +12,7 @@ resource "azurerm_resource_group_template_deployment" "managed_api_connection" {
       value = "${local.eventhub_name}-connection"
     },
     "eventhub_name" = {
-      value =  local.eventhub_name
+      value = local.eventhub_name
     }
   })
   template_content = <<TEMPLATE

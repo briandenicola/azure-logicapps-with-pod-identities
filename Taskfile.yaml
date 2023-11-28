@@ -1,0 +1,119 @@
+version: "3"
+
+vars:
+  NODE_COUNT: 1
+  VM_SKU: Standard_D4ads_v5
+
+tasks:
+  up:
+    desc: Builds end to end an AKS environment
+    cmds:
+    - task: init
+    - task: apply
+    - task: creds
+    - task: build
+    - task: deploy
+
+  init: 
+    desc: Initializes Terraform
+    cmds:
+    - terraform -chdir=./infrastructure workspace new {{.REGION}} || true
+    - terraform -chdir=./infrastructure workspace select {{.REGION}}
+    - terraform -chdir=./infrastructure init
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  apply:
+    desc: Applies terraform
+    cmds:
+      - terraform -chdir=./infrastructure apply -var "region={{.REGION}}" -var "node_count={{.NODE_COUNT}}" -var "vm_size={{.VM_SKU}}" -auto-approve
+    vars:
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+
+  creds:
+    desc: Gets credential file for newly created AKS cluster
+    cmds:
+      - az aks get-credentials -g {{.RG}} -n {{.AKS}} --overwrite-existing
+      - sed -i s/devicecode/azurecli/g ~/.kube/config
+    vars:
+      RG:
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+      AKS:
+        sh: terraform -chdir=./infrastructure output -raw AKS_CLUSTER_NAME
+
+  build:
+    desc: Builds and Pushes Azure Logic App using ACR Build
+    dir: src/logicapp
+    cmds:
+      - sudo /etc/init.d/docker start  
+      - az acr login --name {{.ACR_NAME}}
+      - az acr build --image {{.ACR_NAME}}.azurecr.io/logicapp-demo:{{.COMMIT_VERSION}} --registry {{.ACR_NAME}} --file Dockerfile .
+    vars:
+      COMMIT_VERSION:
+        sh: git rev-parse HEAD | head -c 8
+      ACR_NAME:
+        sh: terraform -chdir=../../infrastructure output -raw ACR_NAME
+
+  deploy:
+    desc: Deploys Azure Logic Apps Demo via Helm
+    cmds:
+      - helm upgrade -i logicapp-demo 
+        --set ACR_NAME="{{.ACR_NAME}}"
+        --set NAMESPACE="{{.NAMESPACE}}"
+        --set COMMIT_VERSION={{.COMMIT_VERSION}}
+        --set APP_IDENTITY_NAME={{.APP_IDENTITY_NAME}}
+        --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}}
+        --set ARM_TENANT_ID={{.ARM_TENANT_ID}}
+        --set EVENTHUB_NAMESPACE_NAME="{{.EVENTHUB_NAMESPACE_NAME}}"
+        --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}"
+        --set APPLICATIONINSIGHTS_CONNECTION_STRING="{{.APPLICATIONINSIGHTS_CONNECTION_STRING}}"
+        --set WORKFLOWS_LOCATION_NAME="{{.REGION}}"
+        --set WORKFLOWS_TENANT_ID="{{.ARM_TENANT_ID}}"
+        --set WORKFLOWS_SUBSCRIPTION_ID="{{.ARM_SUBSCRIPTION_ID}}"
+        --set WORKFLOWS_RESOURCE_GROUP_NAME="{{.RG}}"
+        ./chart
+      - kubectl --namespace {{.NAMESPACE}} get pods
+    vars:
+      ACR_NAME:
+        sh: terraform -chdir=./infrastructure output -raw ACR_NAME
+      COMMIT_VERSION:
+        sh: git rev-parse HEAD | head -c 8
+      APP_IDENTITY_NAME:
+        sh: terraform -chdir=./infrastructure output -raw APP_IDENTITY_NAME
+      ARM_WORKLOAD_APP_ID:
+        sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_APP_ID
+      ARM_TENANT_ID:
+        sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
+      ARM_SUBSCRIPTION_ID: "ccfc5dda-43af-4b5e-8cc2-1dda18f2382e"
+        #sh: terraform -chdir=./infrastructure output -raw ARM_SUBSCRIPTION_ID
+      EVENTHUB_NAMESPACE_NAME:
+        sh: terraform -chdir=./infrastructure output -raw EVENTHUB_NAMESPACE_NAME
+      WEBJOB_STORAGE_ACCOUNT_NAME:
+        sh: terraform -chdir=./infrastructure output -raw WEBJOB_STORAGE_ACCOUNT_NAME
+      NAMESPACE:
+        sh: terraform -chdir=./infrastructure output -raw NAMESPACE
+      APPLICATIONINSIGHTS_CONNECTION_STRING:
+        sh: terraform -chdir=./infrastructure output -raw APPLICATIONINSIGHTS_CONNECTION_STRING
+      RG:
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
+      
+      REGION: '{{default "southcentralus" .CLI_ARGS}}'
+       
+  run:
+    desc: Builds and exeutes Client code
+    dir: src/client
+    cmds:
+      - dotnet run -n {{.EVENTHUB_NAMESPACE_NAME}}
+    vars:
+      EVENTHUB_NAMESPACE_NAME:
+        sh: terraform -chdir=../../infrastructure output -raw EVENTHUB_NAMESPACE_NAME
+
+  down:
+    desc: Destorys Azure infrastructure and cleans up terraform state files
+    cmds:
+      - cd infrastructure ;
+        rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
+      - az group delete -n {{.RG}} --yes || true
+    vars:
+      RG:
+        sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP

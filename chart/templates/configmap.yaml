@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: eventprocessorconfig
+  namespace: {{ .Values.NAMESPACE }}
+data:
+  AZURE_TENANT_ID: {{ print .Values.ARM_TENANT_ID }}
+  AZURE_CLIENT_ID: {{ print .Values.ARM_WORKLOAD_APP_ID }}
+  AZURE_FEDERATED_TOKEN_FILE: /var/run/secrets/azure/tokens/azure-identity-token
+  FUNCTIONS_WORKER_RUNTIME: node
+  FUNCTIONS_EXTENSION_VERSION: ~4
+  EVENTHUB_CONNECTION__credential: managedidentity            
+  EVENTHUB_CONNECTION__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }}  
+  EVENTHUB_CONNECTION__fullyQualifiedNamespace: {{ print .Values.EVENTHUB_NAMESPACE_NAME ".eventhub.windows.net" }}
+  WORKFLOWS_MANAGEMENT_BASE_URI: "https://management.azure.com/"
+  WORKFLOWS_TENANT_ID: {{ .Values.ARM_TENANT_ID }}
+  WORKFLOWS_SUBSCRIPTION_ID: {{ .Values.WORKFLOWS_SUBSCRIPTION_ID }}
+  WORKFLOWS_RESOURCE_GROUP_NAME: {{ .Values.WORKFLOWS_RESOURCE_GROUP_NAME }}
+  WORKFLOWS_LOCATION_NAME: {{ .Values.WORKFLOWS_LOCATION_NAME }}
+  AzureWebJobsStorage__credential: workloadidentity
+  AzureWebJobsStorage__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }} 
+  AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
+  AzureWebJobsStorage__queueServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".queue.core.windows.net" }}
+  AzureWebJobsStorage__tableServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".table.core.windows.net" }}
+  AzureWebJobsStorage__blobServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".blob.core.windows.net" }}
+  AzureWebJobsStorage__fileServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".file.core.windows.net" }}
+  #AzureWebJobsStorage: {{ print "DefaultEndpointsProtocol=https;AccountName=" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ";EndpointSuffix=core.windows.net" }}
+  AzureWebJobsStorage: "DefaultEndpointsProtocol=https;AccountName=lab47400sa;AccountKey=BntC/nM8kf2RxnFzufuwvS4AvngBfUzl8WN+Tm/3ORKlf4eHYXVkcORUCp3su8RExRTkUq6tZDNK+AStGlf3CQ==;EndpointSuffix=core.windows.net"
+  APPLICATIONINSIGHTS_CONNECTION_STRING: {{.Values.APPLICATIONINSIGHTS_CONNECTION_STRING }}
