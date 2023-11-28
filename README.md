@@ -38,13 +38,6 @@ Example Configuration:
 ### Azure Triggers and Bindings
 Each service that Azure Logic Apps interacts with either by a Trigger or Input/Output requires additional authentication. Each service has their own role definitions and connection string format. They do all follow the `__` nomenclature to group a collection of common Environmental Variables.
 
-Example SQL Server Connection:
-```
-  SQL_CONNECTION__credential: managedidentity
-  SQL_CONNECTION__clientId: fc813289-26f6-465d-a288-3ef982e39157 
-  SQL_CONNECTION: Server=sampleazure-sql.database.windows.net;Database=results;Encrypt=true;Authentication=Active Directory Managed Identity
-```
-
 Example Event Hub Connection:
 ```
   EVENTHUB_CONNECTION__credential: managedidentity
