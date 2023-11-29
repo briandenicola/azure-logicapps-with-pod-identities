@@ -12,6 +12,7 @@ terraform.tfstate.d/
 
 # Settings
 local.settings.json
+out/
 
 # User-specific files
 *.rsuser
