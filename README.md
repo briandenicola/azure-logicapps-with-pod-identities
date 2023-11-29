@@ -1,7 +1,3 @@
-⚠️Currently Unsupported as of 11/28/2023⚠️
-See Also Issue: #2 for additional details
-
-<hr/>
 # Overview
 
 A demo repository of using Azure Logic Apps in a Docker container using AKS Workload Identities for binding authentications. This repository will write data to an Azure Event Hub and use Azure Logic Apps to send that data into Azure SQL.
