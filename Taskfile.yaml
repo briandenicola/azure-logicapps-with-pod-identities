@@ -45,7 +45,7 @@ tasks:
     desc: Builds and Pushes Azure Logic App using ACR Build
     dir: src/logicapp
     cmds:
-      - sudo /etc/init.d/docker start  
+      - sudo /etc/init.d/docker start || true
       - az acr login --name {{.ACR_NAME}}
       - az acr build --image {{.ACR_NAME}}.azurecr.io/logicapp-demo:{{.COMMIT_VERSION}} --registry {{.ACR_NAME}} --file Dockerfile .
     vars:
@@ -96,7 +96,6 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw APPLICATIONINSIGHTS_CONNECTION_STRING
       RG:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP
-      
       REGION: '{{default "southcentralus" .CLI_ARGS}}'
        
   run:
