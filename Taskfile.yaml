@@ -45,6 +45,7 @@ tasks:
     desc: Builds and Pushes Azure Logic App using ACR Build
     dir: src/logicapp
     cmds:
+      - dotnet build
       - sudo /etc/init.d/docker start || true
       - az acr login --name {{.ACR_NAME}}
       - az acr build --image {{.ACR_NAME}}.azurecr.io/logicapp-demo:{{.COMMIT_VERSION}} --registry {{.ACR_NAME}} --file Dockerfile .
