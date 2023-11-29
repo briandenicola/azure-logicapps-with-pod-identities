@@ -5,4 +5,3 @@ ENV AzureFunctionsJobHost__Logging__Console__IsEnabled=true
 
 WORKDIR /home/site/wwwroot
 COPY ./out .
-RUN npm install
