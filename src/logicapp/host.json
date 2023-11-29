@@ -7,7 +7,7 @@
   "extensions": {
     "workflow": {
       "settings": {
-        "Runtime.WorkflowOperationDiscoveryHostMode": "false"
+        "Runtime.WorkflowOperationDiscoveryHostMode": "true"
       }
     }
   }
