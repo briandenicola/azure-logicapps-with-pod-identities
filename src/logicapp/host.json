@@ -1,16 +1,11 @@
 {
   "version": "2.0",
   "logging": {
-    "fileLoggingMode": "debugOnly",
-    "logLevel": {
-      "default": "Information"
-    }
-  },
-  "extensions": {
-    "eventHub": {
-        "maxBatchSize": 10,
-        "prefetchCount": 300,
-        "batchCheckpointFrequency": 1
+    "applicationInsights": {
+      "samplingSettings": {
+        "isEnabled": true,
+        "excludedTypes": "Request"
+      }
     }
   },
   "extensionBundle": {
