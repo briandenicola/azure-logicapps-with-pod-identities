@@ -15,9 +15,11 @@ rootCommand.Description = "A client app to publish sample events to Azure Event 
 rootCommand.SetHandler( async (string eventhubNameSpace) =>
 {  
     var credential = new ChainedTokenCredential(new AzureCliCredential());
-    var eventHubNameSpaceFQDN = $"{eventhubNameSpace}.eventhub.windows.net";
+    var eventHubNameSpaceFQDN = $"{eventhubNameSpace}.servicebus.windows.net";
     var producerClient = new EventHubProducerClient(eventHubNameSpaceFQDN, eventHubName, credential);
     
+    System.Console.WriteLine($"Connecting to : {eventHubNameSpaceFQDN}");
+
     using EventDataBatch eventBatch = await producerClient.CreateBatchAsync();
 
     for (int i = 1; i <= 5; i++)

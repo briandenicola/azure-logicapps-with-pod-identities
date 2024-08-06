@@ -5,9 +5,9 @@
         "id": "/subscriptions/ccfc5dda-43af-4b5e-8cc2-1dda18f2382e/providers/Microsoft.Web/locations/southcentralus/managedApis/eventhubs"
       },
       "connection": {
-        "id": "/subscriptions/ccfc5dda-43af-4b5e-8cc2-1dda18f2382e/resourceGroups/deer-24617_rg/providers/Microsoft.Web/connections/deer-24617-eventhub-connection"
+        "id": "/subscriptions/ccfc5dda-43af-4b5e-8cc2-1dda18f2382e/resourceGroups/lab-47400_rg/providers/MICROSOFT.WEB/connections/lab-47400-eventhub-connection"
       },
-      "connectionRuntimeUrl": "https://dc9383f7624c720c.11.common.logic-southcentralus.azure-apihub.net/apim/eventhubs/bd6e5171a4b34001aed776ecc29e5eaa/"
+      "connectionRuntimeUrl": "https://dc9383f7624c720c.11.common.logic-southcentralus.azure-apihub.net/apim/eventhubs/6a0bdd531b214128bc8a38b9f4a854d1"
     }
   }
 }

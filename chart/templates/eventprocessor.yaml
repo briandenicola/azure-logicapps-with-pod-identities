@@ -7,21 +7,22 @@ spec:
   selector:
     matchLabels:
       app: eventprocessor
+      component: eventprocessor
   template:
     metadata:
       labels:
         app: eventprocessor
-        aadpodidbinding: {{ .Values.MSI_SELECTOR  }} 
+        component: eventprocessor
+        azure.workload.identity/use: "true"
     spec:
+      serviceAccountName: {{ print .Values.APP_IDENTITY_NAME }}
       containers:
       - name: eventprocessor
-        image: {{ print .Values.ACR_NAME "/la-eventprocessor:" .Values.COMMIT_VERSION }}
+        image: {{ print .Values.ACR_NAME ".azurecr.io/logicapp-demo:" .Values.COMMIT_VERSION }}
         imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: eventprocessorconfig
-        securityContext:
-          allowPrivilegeEscalation: false
         resources:
           limits:
             cpu: "2"
