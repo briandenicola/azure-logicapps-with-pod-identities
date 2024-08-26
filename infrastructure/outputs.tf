@@ -43,6 +43,11 @@ output "ARM_WORKLOAD_APP_ID" {
   sensitive = false
 }
 
+output "ARM_WORKLOAD_RESOURCE_ID" {
+  value     = azurerm_user_assigned_identity.aks_pod_identity.id
+  sensitive = false
+}
+
 output "ARM_TENANT_ID" {
   value     = azurerm_user_assigned_identity.aks_pod_identity.tenant_id
   sensitive = false

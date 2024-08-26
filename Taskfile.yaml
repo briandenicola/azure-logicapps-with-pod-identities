@@ -64,6 +64,7 @@ tasks:
         --set COMMIT_VERSION={{.COMMIT_VERSION}}
         --set APP_IDENTITY_NAME={{.APP_IDENTITY_NAME}}
         --set ARM_WORKLOAD_APP_ID={{.ARM_WORKLOAD_APP_ID}}
+        --set ARM_WORKLOAD_RESOURCE_ID="{{.ARM_WORKLOAD_RESOURCE_ID}}"
         --set ARM_TENANT_ID={{.ARM_TENANT_ID}}
         --set EVENTHUB_NAMESPACE_NAME="{{.EVENTHUB_NAMESPACE_NAME}}"
         --set WEBJOB_STORAGE_ACCOUNT_NAME="{{.WEBJOB_STORAGE_ACCOUNT_NAME}}"
@@ -85,8 +86,10 @@ tasks:
         sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_APP_ID
       ARM_TENANT_ID:
         sh: terraform -chdir=./infrastructure output -raw ARM_TENANT_ID
-      ARM_SUBSCRIPTION_ID: "ccfc5dda-43af-4b5e-8cc2-1dda18f2382e"
-        #sh: terraform -chdir=./infrastructure output -raw ARM_SUBSCRIPTION_ID
+      ARM_SUBSCRIPTION_ID: 
+        sh: terraform -chdir=./infrastructure output -raw ARM_SUBSCRIPTION_ID
+      ARM_WORKLOAD_RESOURCE_ID: 
+        sh: terraform -chdir=./infrastructure output -raw ARM_WORKLOAD_RESOURCE_ID
       EVENTHUB_NAMESPACE_NAME:
         sh: terraform -chdir=./infrastructure output -raw EVENTHUB_NAMESPACE_NAME
       WEBJOB_STORAGE_ACCOUNT_NAME:

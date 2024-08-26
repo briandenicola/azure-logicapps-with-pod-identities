@@ -25,6 +25,8 @@ data:
   AzureWebJobsKubernetesSecretName: "logicapps-secrets"
   AzureWebJobsStorage: ""
   AzureWebJobsStorage__credential: workloadidentity
+  AzureWebJobsStorage__credentialType: managedIdentity
+  AzureWebJobsStorage__managedIdentityResourceId: {{ .Values.ARM_WORKLOAD_RESOURCE_ID }}
   AzureWebJobsStorage__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }} 
   AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
   AzureWebJobsStorage__queueServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".queue.core.windows.net" }}
