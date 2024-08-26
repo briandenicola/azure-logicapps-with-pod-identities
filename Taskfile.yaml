@@ -1,7 +1,7 @@
 version: "3"
 
 vars:
-  NODE_COUNT: 1
+  NODE_COUNT: 2
   VM_SKU: Standard_D4ads_v5
 
 tasks:
@@ -113,7 +113,7 @@ tasks:
     cmds:
       - cd infrastructure ;
         rm -rf .terraform.lock.hcl .terraform terraform.tfstate terraform.tfstate.backup .terraform.tfstate.lock.info
-      - az group delete -n {{.RG}} --yes || true
+      - az group delete -n {{.RG}} --yes -no-wait || true
     vars:
       RG:
         sh: terraform -chdir=./infrastructure output -raw AKS_RESOURCE_GROUP

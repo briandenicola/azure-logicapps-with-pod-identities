@@ -27,7 +27,6 @@ resource "azurerm_private_dns_zone_virtual_network_link" "acr" {
   virtual_network_id    = azurerm_virtual_network.this.id
 }
 
-
 resource "azurerm_private_endpoint" "acr" {
   name                = "${local.acr_name}-endpoint"
   resource_group_name = azurerm_resource_group.this.name
