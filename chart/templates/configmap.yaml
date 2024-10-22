@@ -5,12 +5,15 @@ metadata:
   namespace: {{ .Values.NAMESPACE }}
 data:
   APP_KIND: "workflowapp"
+  AzureFunctionsJobHost__extensionBundle__id: "Microsoft.Azure.Functions.ExtensionBundle.Workflows"
+  AzureFunctionsJobHost__extensionBundle__version: "[1.*, 2.0.0)" 
   AZURE_TENANT_ID: {{ print .Values.ARM_TENANT_ID }}
   AZURE_CLIENT_ID: {{ print .Values.ARM_WORKLOAD_APP_ID }}
   AZURE_FEDERATED_TOKEN_FILE: /var/run/secrets/azure/tokens/azure-identity-token
-  FUNCTIONS_WORKER_RUNTIME: node
+  FUNCTIONS_WORKER_RUNTIME: dotnet
   FUNCTIONS_EXTENSION_VERSION: ~4
   FUNCTIONS_V2_COMPATIBILITY_MODE: "true"
+  WEBSITE_RUN_FROM_PACKAGE: 1
   WEBSITE_HOSTNAME: localhost
   WEBSITE_SITE_NAME: eventprocessor
   EVENTHUB_CONNECTION__credential: managedidentity            
@@ -25,7 +28,6 @@ data:
   AzureWebJobsKubernetesSecretName: "logicapps-secrets"
   AzureWebJobsStorage__credential: managedIdentity
   AzureWebJobsStorage__managedIdentityResourceId: {{ .Values.ARM_WORKLOAD_RESOURCE_ID }}
-  AzureWebJobsStorage__clientId: {{ .Values.ARM_WORKLOAD_APP_ID }} 
   AzureWebJobsStorage__accountName: {{ .Values.WEBJOB_STORAGE_ACCOUNT_NAME }}
   AzureWebJobsStorage__queueServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".queue.core.windows.net" }}
   AzureWebJobsStorage__tableServiceUri: {{ print "https://" .Values.WEBJOB_STORAGE_ACCOUNT_NAME ".table.core.windows.net" }}

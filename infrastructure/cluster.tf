@@ -19,8 +19,8 @@ resource "azurerm_kubernetes_cluster" "this" {
   node_resource_group          = "${local.resource_name}_k8s_nodes_rg"
   dns_prefix                   = local.aks_name
   sku_tier                     = "Standard"
-  automatic_channel_upgrade    = "patch"
-  node_os_channel_upgrade      = "NodeImage"
+  automatic_upgrade_channel    = "patch"
+  node_os_upgrade_channel      = "NodeImage"
   oidc_issuer_enabled          = true
   workload_identity_enabled    = true
   azure_policy_enabled         = true
@@ -32,13 +32,13 @@ resource "azurerm_kubernetes_cluster" "this" {
   image_cleaner_interval_hours = 48
 
   api_server_access_profile {
-    vnet_integration_enabled = true
-    subnet_id                = azurerm_subnet.api.id
-    authorized_ip_ranges     = [local.allowed_ip_range]
+    # vnet_integration_enabled = true
+    # subnet_id                = azurerm_subnet.api.id
+    authorized_ip_ranges = [local.allowed_ip_range]
   }
 
   azure_active_directory_role_based_access_control {
-    managed            = true
+    #managed            = true
     azure_rbac_enabled = true
     tenant_id          = data.azurerm_client_config.current.tenant_id
   }
@@ -62,17 +62,17 @@ resource "azurerm_kubernetes_cluster" "this" {
   }
 
   default_node_pool {
-    name                = "default"
-    node_count          = var.node_count
-    vm_size             = var.vm_size
-    os_disk_size_gb     = 100
-    vnet_subnet_id      = azurerm_subnet.nodes.id
-    type                = "VirtualMachineScaleSets"
-    os_sku              = "Mariner"
-    enable_auto_scaling = true
-    min_count           = 1
-    max_count           = var.node_count
-    max_pods            = 250
+    name                 = "default"
+    node_count           = var.node_count
+    vm_size              = var.vm_size
+    os_disk_size_gb      = 100
+    vnet_subnet_id       = azurerm_subnet.nodes.id
+    type                 = "VirtualMachineScaleSets"
+    os_sku               = "Mariner"
+    auto_scaling_enabled = true
+    min_count            = 1
+    max_count            = var.node_count
+    max_pods             = 250
   }
 
   network_profile {
@@ -119,9 +119,9 @@ resource "azurerm_kubernetes_cluster" "this" {
     keda_enabled = true
   }
 
-  service_mesh_profile {
-    mode                             = "Istio"
-    internal_ingress_gateway_enabled = true
-  }
+  # service_mesh_profile {
+  #   mode                             = "Istio"
+  #   internal_ingress_gateway_enabled = true
+  # }
 
 }

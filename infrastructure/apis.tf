@@ -31,7 +31,7 @@ resource "azurerm_resource_group_template_deployment" "managed_api_connection" {
   "resources": [
     {
       "type": "MICROSOFT.WEB/CONNECTIONS",
-      "apiVersion": "2016-06-01",
+      "apiVersion": "2018-07-01-preview",
       "name": "[parameters('connections_eventhub_name')]",
       "location": "[resourceGroup().location]",
       "kind": "V2",
